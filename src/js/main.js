@@ -119,22 +119,18 @@ function updateServerMonitor(data) {
 let _fetchErrorLogged = false;
 
 function fetchServerStatus() {
-    fetch(`${SERVER_CONFIG.apiUrl}/status`, { signal: AbortSignal.timeout(5000) })
+    fetch(`${SERVER_CONFIG.apiUrl}/status`, { 
+        signal: AbortSignal.timeout(5000),
+        headers: { 'Accept': 'application/json' }
+    })
         .then(response => {
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const ct = response.headers.get('content-type') || '';
-            if (!ct.includes('application/json')) throw new Error('Respuesta no es JSON');
+            if (!ct.includes('application/json')) throw new Error('No JSON');
             return response.json();
         })
-        .then(data => {
-            _fetchErrorLogged = false;
-            updateServerMonitor(data);
-        })
-        .catch(() => {
-            // Error silencioso - no loguear en consola
-            _fetchErrorLogged = true;
-            updateServerMonitor({ online: false });
-        });
+        .then(data => updateServerMonitor(data))
+        .catch(() => updateServerMonitor({ online: false }));
 }
 
 window.copyConnectCommand = function(evt) {
