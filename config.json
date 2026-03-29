@@ -1,0 +1,22 @@
+{
+  "server": {
+    "name": "Argentina Limando Carter",
+    "ip": "argentina.alc.game",
+    "port": 22003,
+    "maxPlayers": 128,
+    "mode": "Gameplay & Roleplay 50/50"
+  },
+  "branding": {
+    "logo": "/public/logoE_1.png",
+    "description": "Bienvenido a Argentina Limando Carter, un servidor dedicado a proporcionar una experiencia única en MTA SA. Nuestro objetivo es crear una comunidad activa donde los jugadores pueden disfrutar de gameplay intenso combinado con roleplay inmersivo. Únete a nosotros y sé parte de algo especial.",
+    "copyright": "Argentina Limando Carter © 2026 | Servidor Oficial de MTA SA"
+  },
+  "api": {
+    "baseUrl": "https://api.alc.abrdns.com",
+    "updateInterval": 120000
+  },
+  "links": {
+    "discord": "https://discord.com/invite/x48tFsp7h3",
+    "instagram": "https://www.instagram.com/mta.alc"
+  }
+}
