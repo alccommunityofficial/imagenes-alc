@@ -106,10 +106,10 @@ function fetchServerStatus() {
         });
 }
 
-window.copyConnectCommand = function() {
+window.copyConnectCommand = function(evt) {
     const command = `connect ${SERVER_CONFIG.ip}:${SERVER_CONFIG.port}`;
     navigator.clipboard.writeText(command).then(() => {
-        const btn = event.target.closest('button') || event.target;
+        const btn = (evt && evt.target) ? evt.target.closest('button') || evt.target : document.querySelector('.btn-primary');
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
         btn.style.background = 'linear-gradient(135deg, #2a7f3f 0%, #4CAF50 100%)';
@@ -117,6 +117,8 @@ window.copyConnectCommand = function() {
             btn.innerHTML = originalText;
             btn.style.background = '';
         }, 2000);
+    }).catch(err => {
+        console.error('[COPY ERROR] No se pudo copiar:', err);
     });
 }
 
