@@ -7,9 +7,42 @@ let SERVER_CONFIG = {
 };
 
 let lastOnlineStatus = null;
+let faviconFrames = [], currentFaviconFrame = 0;
+let faviconAnimationInterval = null;
+
+function initFaviconAnimation() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64; canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    const colors = ['#e0a0c0', '#ff00ff', '#ff6ec7', '#e0a0c0'];
+    
+    for (let i = 0; i < 8; i++) {
+        canvas.width = 64; canvas.height = 64;
+        ctx.fillStyle = '#111111';
+        ctx.fillRect(0, 0, 64, 64);
+        ctx.fillStyle = colors[Math.floor(i / 2) % colors.length];
+        ctx.beginPath();
+        ctx.arc(32, 32, 20 + (i % 2) * 5, 0, (i / 8) * Math.PI * 2);
+        ctx.lineTo(32, 32);
+        ctx.fill();
+        faviconFrames.push(canvas.toDataURL());
+    }
+}
+
+function animateFavicon() {
+    if (faviconFrames.length === 0) return;
+    const link = document.querySelector('link[rel="icon"]');
+    if (link) {
+        link.href = faviconFrames[currentFaviconFrame];
+        currentFaviconFrame = (currentFaviconFrame + 1) % faviconFrames.length;
+    }
+}
 
 async function initializeApp() {
     try {
+        initFaviconAnimation();
+        faviconAnimationInterval = setInterval(animateFavicon, 150);
+        
         // Intentar cargar config.json — validar que sea JSON real antes de parsear
         const response = await fetch('./config.json');
         const contentType = response.headers.get('content-type') || '';
@@ -40,7 +73,6 @@ async function initializeApp() {
 
     } catch (error) {
         // Config no disponible — usar valores hardcodeados por defecto, sin spam de errores
-        console.warn('[APP] Usando configuración por defecto:', error.message);
     } finally {
         // Siempre arrancar el monitor del servidor
         fetchServerStatus();
@@ -87,7 +119,7 @@ function updateServerMonitor(data) {
 let _fetchErrorLogged = false;
 
 function fetchServerStatus() {
-    fetch(`${SERVER_CONFIG.apiUrl}/status`, { signal: AbortSignal.timeout(8000) })
+    fetch(`${SERVER_CONFIG.apiUrl}/status`, { signal: AbortSignal.timeout(5000) })
         .then(response => {
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const ct = response.headers.get('content-type') || '';
@@ -98,10 +130,9 @@ function fetchServerStatus() {
             _fetchErrorLogged = false;
             updateServerMonitor(data);
         })
-        .catch(error => {
-            if (!_fetchErrorLogged) {
-                _fetchErrorLogged = true;
-            }
+        .catch(() => {
+            // Error silencioso - no loguear en consola
+            _fetchErrorLogged = true;
             updateServerMonitor({ online: false });
         });
 }
