@@ -12,7 +12,7 @@
     "copyright": "Argentina Limando Carter © 2026 | Servidor Oficial de MTA SA"
   },
   "api": {
-    "baseUrl": "https://api.alc.abrdns.com",
+    "baseUrl": " ",
     "updateInterval": 120000
   },
   "links": {
