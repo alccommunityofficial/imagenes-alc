@@ -2,7 +2,7 @@ let SERVER_CONFIG = {
     ip: 'argentina.alc.game',
     port: 22003,
     maxPlayers: 128,
-    apiUrl: 'https://api.alc.abrdns.com',
+    apiUrl: ' ',
     updateInterval: 120000
 };
 
